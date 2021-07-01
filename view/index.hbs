@@ -1,0 +1,184 @@
+{{#if template}}
+<template>
+  <div class="app-container">
+    <div class="title-line fj flex-a">工单工作台</div>
+    {{#if tipsComponent}}
+    <tips class="mb20">
+      <div class="flex-box">
+        <span class="ad-prompt-matter">重要提示</span>
+        <div>
+          <p>我是黑色字体<span class="font-red">我是红色字体</span></p>
+        </div>
+      </div>
+    </tips>
+    {{/if}}
+    <div class="ovh mb20">
+      {{#if elButton}}
+      <el-button type="primary">领单</el-button>
+      {{/if}}
+      <div class="flex-box fr">
+        {{#if selectDownComponent}}
+        <select-down v-model="formData.productId" :init-type="1" :is-channel="true" @update="handleSelect" />
+        {{/if}}
+        {{#if searchComponent}}
+        <search :init-type="1" :selected-options="selectedOptions" @handle-search="handleSearch" />
+        {{/if}}
+      </div>
+    </div>
+    <tables
+      v-loading="listLoading"
+      :data="tableData"
+      :col-configs="colConfigs"
+      :table-height="tableHeight"
+      border
+      stripe
+      fit
+      tooltip-effect="dark"
+    >
+      <el-table-column
+        slot="opt"
+        prop="status"
+        label="操作"
+        align="center"
+        width="150"
+      >
+        <template>
+          <el-button
+            type="success"
+            size="mini"
+          >查看</el-button>
+          <el-button
+             type="primary"
+             size="mini"
+          >转单</el-button>
+        </template>
+      </el-table-column>
+    </tables>
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="pagination.pageIndex"
+      :limit.sync="pagination.pageSize"
+      @pagination="pageTo"
+    />
+  </div>
+</template>
+{{/if}}
+
+{{#if script}}
+<script>
+import Tables from '@/components/Table'
+import Pagination from '@/components/Pagination'
+{{#if tipsComponent}}
+import Tips from '@/components/Tips'
+{{/if}}
+{{#if searchComponent}}
+import Search from '@/components/Search'
+{{/if}}
+{{#if selectDownComponent}}
+import SelectDown from '@/components/SelectDown'
+{{/if}}
+
+export default {
+  name: '{{ properCase name }}',
+  components: {
+    {{#if searchComponent}}
+    Search,
+    {{/if}}
+    {{#if tipsComponent}}
+    Tips,
+    {{/if}}
+    {{#if selectDownComponent}}
+    SelectDown,
+    {{/if}}
+    Tables,
+    Pagination
+  },
+  data() {
+    return {
+      {{#if selectDownComponent}}
+      formData: {
+        productId: ''
+      },
+      {{/if}}
+      {{#if searchComponent}}
+      selectedOptions: [
+        { value: 1, label: '请添加搜索类型' }
+      ],
+      searchData: {
+        key: '',
+        type: 1
+      },
+      {{/if}}
+      tableHeight: window.innerHeight * 0.50,
+      listLoading: false,
+      colConfigs: [
+        { prop: 'name', label: '工单ID', align: 'center' },
+        { prop: 'packageName', label: '产品名称', align: 'center' },
+        { prop: 'version', label: '问题类型', align: 'center' },
+        { prop: 'operationTime', label: 'openid', align: 'center' },
+        { prop: 'operationUserName', label: '联系手机', align: 'center' },
+        { prop: 'operationUserName', label: '内容', align: 'center' },
+        { prop: 'operationUserName', label: '领取人', align: 'center' },
+        { prop: 'operationUserName', label: '工单状态', align: 'center' },
+        { prop: 'operationUserName', label: '提交时间', align: 'center' },
+        { slot: 'opt' }
+      ],
+      tableData: [{}],
+      pagination: {
+        pageIndex: 1, // 当前页
+        pageSize: 10 // 一页显示多少条数据
+      },
+      total: 1
+    }
+  },
+  created() {
+    this._ajax_getList()
+  },
+  methods: {
+    /*
+    * _ajax_getList
+    *
+    * */
+    _ajax_getList() {
+      this.listLoading = true
+      const { pageIndex, pageSize } = this.pagination
+      const params = {
+        pageIndex,
+        pageSize
+      }
+      this.listLoading = false
+      console.log(params)
+    },
+    {{#if searchComponent}}
+    handleSearch(val) {
+      this.searchData = {
+        key: val.value,
+        type: val.type
+      }
+      this.pagination.pageIndex = 1
+      this._ajax_getList()
+      console.log(val)
+    },
+    {{/if}}
+    {{#if selectDownComponent}}
+    handleSelect() {
+      this.pagination.pageIndex = 1
+      this._ajax_getList()
+    },
+    {{/if}}
+    pageTo(val) {
+      this.pagination.pageIndex = val.page
+      this.pagination.pageSize = val.limit
+      this._ajax_getList()
+    }
+  }
+}
+</script>
+{{/if}}
+
+{{#if style}}
+<style lang="scss" scoped>
+
+</style>
+{{/if}}

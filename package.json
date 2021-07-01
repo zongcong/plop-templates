@@ -1,0 +1,15 @@
+{
+  "name": "plop-templates",
+  "version": "1.0.0",
+  "description": "使用 plop 的一个后台管理页面生成模板",
+  "main": "utils.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "plop": "2.3.0"
+  },
+  "author": "tzc",
+  "license": "ISC",
+  "homepage": "https://github.com/zongcong/plop-templates#readme"
+}
